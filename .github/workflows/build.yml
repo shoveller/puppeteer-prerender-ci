@@ -31,26 +31,9 @@ jobs:
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
-      # 분할된 Chrome 압축 파일 결합
-      - name: Combine split Chrome zip files
-        run: |
-          cat ./chrome/chrome-linux.zip.part-* > chrome-linux.zip
-          echo "Combined Chrome zip files"
-
-      # 결합된 zip 파일 압축 해제
-      - name: Extract Chrome zip file
-        run: |
-          unzip chrome-linux.zip
-          echo "Extracted Chrome zip file"
-          ls -la chrome-linux/
-
-      # Chrome 실행 파일에 실행 권한 부여
-      - name: Set executable permissions for Chrome
-        run: |
-          chmod +x ./chrome-linux/chrome
-          chmod +x ./chrome-linux/chrome_sandbox
-          chmod +x ./chrome-linux/chrome-wrapper
-          echo "Set executable permissions for Chrome"
+      # Chrome 설정 (압축 파일 결합, 압축 해제, 실행 권한 부여)
+      - name: Prepare Chrome
+        run: pnpm prepare-chrome
 
       - name: Build project
         run: pnpm build
