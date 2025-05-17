@@ -1,0 +1,65 @@
+name: Deploy to gh-Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "latest"
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      # 분할된 Chrome 압축 파일 결합
+      - name: Combine split Chrome zip files
+        run: |
+          cat ./chrome/chrome-linux.zip.part-* > chrome-linux.zip
+          echo "Combined Chrome zip files"
+
+      # 결합된 zip 파일 압축 해제
+      - name: Extract Chrome zip file
+        run: |
+          unzip chrome-linux.zip
+          echo "Extracted Chrome zip file"
+          ls -la chrome-linux/
+
+      # Chrome 실행 파일에 실행 권한 부여
+      - name: Set executable permissions for Chrome
+        run: |
+          chmod +x ./chrome-linux/chrome
+          chmod +x ./chrome-linux/chrome_sandbox
+          chmod +x ./chrome-linux/chrome-wrapper
+          echo "Set executable permissions for Chrome"
+
+      - name: Build project
+        run: pnpm build
+        env:
+          PUPPETEER_EXECUTABLE_PATH: ${{ github.workspace }}/chrome-linux/chrome
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
