@@ -54,9 +54,6 @@ jobs:
 
       - name: Build project
         run: pnpm build
-        env:
-          PUPPETEER_EXECUTABLE_PATH: ${{ github.workspace }}/chrome-linux/chrome
-          PUPPETEER_SKIP_DOWNLOAD: "true"
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4

@@ -19,9 +19,7 @@ export default defineConfig({
       rendererOptions: {
         maxConcurrentRoutes: 1,
         renderAfterTime: 500,
-        executablePath:
-          process.env.PUPPETEER_EXECUTABLE_PATH ||
-          path.join(process.cwd(), "chrome-linux", "chrome"),
+        executablePath: path.join(process.cwd(), "chrome-linux", "chrome"),
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
       },
       postProcess(renderedRoute) {
