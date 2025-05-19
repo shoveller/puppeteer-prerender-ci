@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      puppeteer-core:
+        specifier: ^24.8.2
+        version: 24.8.2
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -48,9 +51,6 @@ importers:
       globals:
         specifier: ^16.0.0
         version: 16.1.0
-      puppeteer:
-        specifier: ^24.8.2
-        version: 24.8.2(typescript@5.8.3)
       tsx:
         specifier: ^4.19.4
         version: 4.19.4
